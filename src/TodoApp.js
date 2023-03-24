@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { useLocalStorage } from './useLocalStorage';
 import "./TodoApp.css";
 
 function TodoApp() {
   const [inputText, setInputText] = useState("");
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useLocalStorage('todos', []);
 
   const handleInput = (e) => {
     setInputText(e.target.value);
@@ -13,6 +14,12 @@ function TodoApp() {
     e.preventDefault();
     setTodos([...todos, inputText]);
     setInputText("");
+  };
+
+  const deleteTodo = (index) => {
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
   };
 
   return (
@@ -31,7 +38,10 @@ function TodoApp() {
       </form>
       <ul className="todo-list">
         {todos.map((todo, index) => (
-          <li key={index}>{todo}</li>
+          <li key={index}>
+            {todo}
+            <button onClick={() => deleteTodo(index)}>Delete</button>
+          </li>
         ))}
       </ul>
     </div>
